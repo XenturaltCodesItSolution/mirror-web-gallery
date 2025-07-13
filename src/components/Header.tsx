@@ -10,11 +10,11 @@ export const Header = () => {
           <div className="flex items-center space-x-6">
             <div className="flex items-center space-x-2">
               <Phone className="w-4 h-4" />
-              <span>お電話でのお問い合わせ: 0120-123-456</span>
+              <span>Phone Consultation: 0120-123-456</span>
             </div>
             <div className="flex items-center space-x-2">
               <Clock className="w-4 h-4" />
-              <span>受付時間: 平日9:00-18:00</span>
+              <span>Business Hours: Mon-Fri 9:00-18:00</span>
             </div>
           </div>
           <div className="flex items-center space-x-2">
@@ -38,25 +38,25 @@ export const Header = () => {
 
           <div className="hidden md:flex items-center space-x-8">
             <a href="#services" className="text-gray-700 hover:text-medical-blue transition-colors">
-              診療科目
+              Services
             </a>
             <a href="#doctors" className="text-gray-700 hover:text-medical-blue transition-colors">
-              医師紹介
+              Doctors
             </a>
             <a href="#pricing" className="text-gray-700 hover:text-medical-blue transition-colors">
-              料金案内
+              Pricing
             </a>
             <a href="#contact" className="text-gray-700 hover:text-medical-blue transition-colors">
-              お問い合わせ
+              Contact
             </a>
           </div>
 
           <div className="flex items-center space-x-3">
             <Button variant="medical-outline" size="sm">
-              ログイン
+              Login
             </Button>
             <Button variant="medical" size="sm">
-              新規登録
+              Sign Up
             </Button>
           </div>
         </div>

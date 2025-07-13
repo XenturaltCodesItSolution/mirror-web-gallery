@@ -30,7 +30,7 @@ export const ServiceCard = ({
     <Card className="relative group hover:shadow-xl transition-all duration-300 border-2 hover:border-medical-blue">
       {isPopular && (
         <div className="absolute -top-3 left-4 z-10">
-          <Badge className="bg-medical-red text-white">人気</Badge>
+          <Badge className="bg-medical-red text-white">Popular</Badge>
         </div>
       )}
       
@@ -68,7 +68,7 @@ export const ServiceCard = ({
           </div>
           <div className="flex items-center space-x-1">
             <Users className="w-4 h-4" />
-            <span>{patients}名</span>
+            <span>{patients} patients</span>
           </div>
           <div className="flex items-center space-x-1">
             <Clock className="w-4 h-4" />
@@ -81,19 +81,19 @@ export const ServiceCard = ({
           <div className="flex items-center justify-between mb-3">
             <div>
               <span className="text-2xl font-bold text-medical-blue">{price}</span>
-              <span className="text-gray-500 text-sm ml-1">〜</span>
+              <span className="text-gray-500 text-sm ml-1">+</span>
             </div>
             <Button 
               variant={isPopular ? "medical-red" : "medical"} 
               size="sm"
               className="shrink-0"
             >
-              予約する
+              Book Now
             </Button>
           </div>
           
           <Button variant="outline" className="w-full text-sm">
-            詳細を見る
+            View Details
           </Button>
         </div>
       </CardContent>

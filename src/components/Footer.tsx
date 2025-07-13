@@ -16,50 +16,50 @@ export const Footer = () => {
               <h3 className="text-xl font-bold">Medical Consultation</h3>
             </div>
             <p className="text-gray-300 text-sm leading-relaxed">
-              信頼できる医師による質の高いオンライン医療サービスを提供しています。
-              いつでも、どこでも安心して医療相談をご利用いただけます。
+              We provide high-quality online medical services by trusted physicians.
+              You can use our medical consultation services safely anytime, anywhere.
             </p>
             <div className="flex space-x-4">
               <div className="flex items-center space-x-2 text-sm">
                 <Shield className="w-4 h-4 text-medical-blue" />
-                <span>安全・安心</span>
+                <span>Safe & Secure</span>
               </div>
               <div className="flex items-center space-x-2 text-sm">
                 <Heart className="w-4 h-4 text-medical-red" />
-                <span>高品質診療</span>
+                <span>Quality Care</span>
               </div>
             </div>
           </div>
 
           {/* Services */}
           <div className="space-y-4">
-            <h4 className="text-lg font-bold text-medical-blue">診療科目</h4>
+            <h4 className="text-lg font-bold text-medical-blue">Medical Services</h4>
             <ul className="space-y-2 text-sm text-gray-300">
-              <li><a href="#" className="hover:text-white transition-colors">内科・一般診療</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">皮膚科診療</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">精神科・心療内科</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">小児科診療</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">婦人科診療</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">整形外科診療</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Internal Medicine</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Dermatology</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Psychiatry</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Pediatrics</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Gynecology</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Orthopedics</a></li>
             </ul>
           </div>
 
           {/* Support */}
           <div className="space-y-4">
-            <h4 className="text-lg font-bold text-medical-blue">サポート</h4>
+            <h4 className="text-lg font-bold text-medical-blue">Support</h4>
             <ul className="space-y-2 text-sm text-gray-300">
-              <li><a href="#" className="hover:text-white transition-colors">ご利用方法</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">よくある質問</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">料金について</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">お支払い方法</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">キャンセルポリシー</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">技術的サポート</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">How to Use</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">FAQ</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Payment Methods</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Cancellation Policy</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Technical Support</a></li>
             </ul>
           </div>
 
           {/* Contact */}
           <div className="space-y-4">
-            <h4 className="text-lg font-bold text-medical-blue">お問い合わせ</h4>
+            <h4 className="text-lg font-bold text-medical-blue">Contact Us</h4>
             <div className="space-y-3 text-sm">
               <div className="flex items-center space-x-2">
                 <Phone className="w-4 h-4 text-medical-blue" />
@@ -67,19 +67,19 @@ export const Footer = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="w-4 h-4 text-medical-blue" />
-                <span>info@medical-consult.jp</span>
+                <span>info@medical-consult.com</span>
               </div>
               <div className="flex items-start space-x-2">
                 <MapPin className="w-4 h-4 text-medical-blue mt-0.5" />
                 <div>
-                  <p>〒100-0001</p>
-                  <p>東京都千代田区千代田1-1-1</p>
+                  <p>123 Medical Center Drive</p>
+                  <p>New York, NY 10001</p>
                 </div>
               </div>
             </div>
             
             <Button variant="medical" size="sm" className="w-full">
-              今すぐ診療予約
+              Book Consultation Now
             </Button>
           </div>
         </div>
@@ -91,19 +91,19 @@ export const Footer = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
               <div className="text-3xl font-bold text-medical-blue">50,000+</div>
-              <div className="text-sm text-gray-400">診療実績</div>
+              <div className="text-sm text-gray-400">Consultations</div>
             </div>
             <div>
               <div className="text-3xl font-bold text-medical-red">200+</div>
-              <div className="text-sm text-gray-400">提携医師</div>
+              <div className="text-sm text-gray-400">Partner Doctors</div>
             </div>
             <div>
               <div className="text-3xl font-bold text-medical-blue">4.8</div>
-              <div className="text-sm text-gray-400">平均評価</div>
+              <div className="text-sm text-gray-400">Average Rating</div>
             </div>
             <div>
               <div className="text-3xl font-bold text-medical-red">24h</div>
-              <div className="text-sm text-gray-400">対応時間</div>
+              <div className="text-sm text-gray-400">Available</div>
             </div>
           </div>
         </div>
@@ -117,9 +117,9 @@ export const Footer = () => {
               © 2024 Medical Consultation. All rights reserved.
             </div>
             <div className="flex space-x-6 text-sm text-gray-400">
-              <a href="#" className="hover:text-white transition-colors">プライバシーポリシー</a>
-              <a href="#" className="hover:text-white transition-colors">利用規約</a>
-              <a href="#" className="hover:text-white transition-colors">特定商取引法</a>
+              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+              <a href="#" className="hover:text-white transition-colors">Disclaimer</a>
             </div>
           </div>
         </div>

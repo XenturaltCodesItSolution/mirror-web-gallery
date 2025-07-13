@@ -10,11 +10,11 @@ export const ContactSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            お問い合わせ
+            Contact Us
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            ご質問やご相談がございましたら、お気軽にお問い合わせください。
-            専門スタッフが迅速に対応いたします。
+            If you have any questions or concerns, please feel free to contact us.
+            Our professional staff will respond promptly.
           </p>
         </div>
 
@@ -23,51 +23,51 @@ export const ContactSection = () => {
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="text-2xl text-medical-blue">
-                お問い合わせフォーム
+                Contact Form
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    お名前 <span className="text-medical-red">*</span>
+                    Full Name <span className="text-medical-red">*</span>
                   </label>
-                  <Input placeholder="山田 太郎" className="w-full" />
+                  <Input placeholder="John Smith" className="w-full" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    フリガナ <span className="text-medical-red">*</span>
+                    Phone Number
                   </label>
-                  <Input placeholder="ヤマダ タロウ" className="w-full" />
+                  <Input placeholder="+1 (555) 123-4567" className="w-full" />
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  メールアドレス <span className="text-medical-red">*</span>
+                  Email Address <span className="text-medical-red">*</span>
                 </label>
                 <Input type="email" placeholder="example@email.com" className="w-full" />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  電話番号
+                  Subject <span className="text-medical-red">*</span>
                 </label>
-                <Input type="tel" placeholder="090-1234-5678" className="w-full" />
+                <Input placeholder="Consultation inquiry" className="w-full" />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  お問い合わせ内容 <span className="text-medical-red">*</span>
+                  Message <span className="text-medical-red">*</span>
                 </label>
                 <Textarea 
-                  placeholder="ご質問やご相談内容をお書きください"
+                  placeholder="Please describe your questions or concerns"
                   className="w-full min-h-[120px]"
                 />
               </div>
 
               <Button variant="medical" className="w-full py-6 text-lg">
-                送信する
+                Send Message
               </Button>
             </CardContent>
           </Card>
@@ -77,7 +77,7 @@ export const ContactSection = () => {
             <Card className="shadow-lg">
               <CardHeader>
                 <CardTitle className="text-2xl text-medical-blue">
-                  お電話でのお問い合わせ
+                  Phone Consultation
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -87,7 +87,7 @@ export const ContactSection = () => {
                   </div>
                   <div>
                     <p className="text-2xl font-bold text-medical-blue">0120-123-456</p>
-                    <p className="text-gray-600">通話料無料</p>
+                    <p className="text-gray-600">Toll Free</p>
                   </div>
                 </div>
                 
@@ -96,9 +96,9 @@ export const ContactSection = () => {
                     <Clock className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <p className="font-medium">受付時間</p>
-                    <p className="text-gray-600">平日 9:00 - 18:00</p>
-                    <p className="text-gray-600">土曜 9:00 - 14:00</p>
+                    <p className="font-medium">Business Hours</p>
+                    <p className="text-gray-600">Weekdays 9:00 - 18:00</p>
+                    <p className="text-gray-600">Saturday 9:00 - 14:00</p>
                   </div>
                 </div>
               </CardContent>
@@ -107,7 +107,7 @@ export const ContactSection = () => {
             <Card className="shadow-lg">
               <CardHeader>
                 <CardTitle className="text-2xl text-medical-blue">
-                  その他のお問い合わせ方法
+                  Other Contact Methods
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -116,8 +116,8 @@ export const ContactSection = () => {
                     <Mail className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <p className="font-medium">メール</p>
-                    <p className="text-medical-blue">info@medical-consult.jp</p>
+                    <p className="font-medium">Email</p>
+                    <p className="text-medical-blue">info@medical-consult.com</p>
                   </div>
                 </div>
                 
@@ -126,9 +126,9 @@ export const ContactSection = () => {
                     <MapPin className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <p className="font-medium">所在地</p>
-                    <p className="text-gray-600">〒100-0001</p>
-                    <p className="text-gray-600">東京都千代田区千代田1-1-1</p>
+                    <p className="font-medium">Location</p>
+                    <p className="text-gray-600">123 Medical Center Drive</p>
+                    <p className="text-gray-600">New York, NY 10001</p>
                   </div>
                 </div>
               </CardContent>
@@ -137,14 +137,14 @@ export const ContactSection = () => {
             <Card className="bg-medical-blue-light border-medical-blue">
               <CardContent className="pt-6">
                 <h3 className="text-lg font-bold text-medical-blue mb-2">
-                  緊急時のご相談
+                  Emergency Consultation
                 </h3>
                 <p className="text-gray-700 text-sm mb-4">
-                  体調に異常を感じた場合は、まずは最寄りの救急外来をご利用ください。
-                  オンライン診療は緊急時の対応には適しておりません。
+                  If you feel any abnormality in your physical condition, please use the nearest emergency department first.
+                  Online consultation is not suitable for emergency response.
                 </p>
                 <Button variant="medical-red" size="sm">
-                  緊急連絡先一覧
+                  Emergency Contacts
                 </Button>
               </CardContent>
             </Card>
