@@ -17,11 +17,16 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 212 100% 48%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 212 100% 42%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent-red: 0 84% 58%;
+    --accent-red-foreground: 0 0% 100%;
+    --accent-red-hover: 0 84% 52%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
@@ -34,7 +39,18 @@ All colors MUST be HSL.
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 212 100% 48%;
+
+    --medical-blue: 212 100% 48%;
+    --medical-red: 0 84% 58%;
+    --medical-blue-light: 212 100% 95%;
+    --medical-red-light: 0 84% 95%;
+    
+    --gradient-primary: linear-gradient(135deg, hsl(var(--medical-blue)), hsl(var(--primary-hover)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--medical-red)), hsl(var(--accent-red-hover)));
+    
+    --shadow-card: 0 4px 20px hsl(var(--medical-blue) / 0.1);
+    --shadow-hover: 0 8px 30px hsl(var(--medical-blue) / 0.15);
 
     --radius: 0.5rem;
 
