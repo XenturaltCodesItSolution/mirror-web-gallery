@@ -36,18 +36,30 @@ export const Header = () => {
             </h1>
           </div>
 
-          <div className="hidden md:flex items-center space-x-8">
-            <a href="#services" className="text-gray-700 hover:text-medical-blue transition-colors">
-              Services
+          <div className="hidden md:flex items-center space-x-6">
+            <a href="/" className="text-gray-700 hover:text-medical-blue transition-colors">
+              Home
             </a>
-            <a href="#doctors" className="text-gray-700 hover:text-medical-blue transition-colors">
-              Doctors
+            <a href="/offers" className="text-gray-700 hover:text-medical-blue transition-colors">
+              Offers
             </a>
-            <a href="#pricing" className="text-gray-700 hover:text-medical-blue transition-colors">
-              Pricing
+            <a href="/thyrocare-package" className="text-gray-700 hover:text-medical-blue transition-colors">
+              Thyrocare Package
             </a>
-            <a href="#contact" className="text-gray-700 hover:text-medical-blue transition-colors">
-              Contact
+            <a href="/thyrocare-profile" className="text-gray-700 hover:text-medical-blue transition-colors">
+              Thyrocare Profile
+            </a>
+            <a href="/blood-test" className="text-gray-700 hover:text-medical-blue transition-colors">
+              Blood Test
+            </a>
+            <a href="/diagnostic-centres" className="text-gray-700 hover:text-medical-blue transition-colors">
+              Diagnostic Centres
+            </a>
+            <a href="/blog" className="text-gray-700 hover:text-medical-blue transition-colors">
+              Blog
+            </a>
+            <a href="/shop" className="text-gray-700 hover:text-medical-blue transition-colors">
+              Shop
             </a>
           </div>
 
