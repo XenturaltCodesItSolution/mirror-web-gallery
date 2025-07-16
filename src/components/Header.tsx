@@ -1,26 +1,31 @@
 import { Button } from "@/components/ui/button";
-import { Phone, Mail, Clock } from "lucide-react";
+import { Phone, Mail, Clock, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useContactInfo } from "@/contexts/ContactContext";
 
 export const Header = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { contactInfo } = useContactInfo();
+
   return (
     <header className="bg-white shadow-md">
       {/* Top contact bar */}
       <div className="bg-medical-blue text-white py-2">
         <div className="container mx-auto px-4 flex justify-between items-center text-sm">
-          <div className="flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-6">
             <div className="flex items-center space-x-2">
               <Phone className="w-4 h-4" />
-              <span>Phone Consultation: 0120-123-456</span>
+              <span>Phone: {contactInfo.phone}</span>
             </div>
             <div className="flex items-center space-x-2">
               <Clock className="w-4 h-4" />
-              <span>Business Hours: Mon-Fri 9:00-18:00</span>
+              <span>Hours: {contactInfo.businessHours}</span>
             </div>
           </div>
           <div className="flex items-center space-x-2">
             <Mail className="w-4 h-4" />
-            <span>info@medical-consult.jp</span>
+            <span className="hidden sm:inline">{contactInfo.email}</span>
           </div>
         </div>
       </div>
@@ -32,11 +37,12 @@ export const Header = () => {
             <div className="w-10 h-10 bg-medical-blue rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-lg">M</span>
             </div>
-            <h1 className="text-2xl font-bold text-medical-blue">
+            <h1 className="text-xl md:text-2xl font-bold text-medical-blue">
               Medical Consultation
             </h1>
           </div>
 
+          {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-6">
             <Link to="/" className="text-gray-700 hover:text-medical-blue transition-colors">
               Home
@@ -67,7 +73,8 @@ export const Header = () => {
             </Link>
           </div>
 
-          <div className="flex items-center space-x-3">
+          {/* Desktop Auth Buttons */}
+          <div className="hidden md:flex items-center space-x-3">
             <Button variant="medical-outline" size="sm">
               Login
             </Button>
@@ -75,7 +82,96 @@ export const Header = () => {
               Sign Up
             </Button>
           </div>
+
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="md:hidden"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </Button>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden mt-4 pb-4 border-t border-gray-200">
+            <div className="flex flex-col space-y-2 pt-4">
+              <Link 
+                to="/" 
+                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link 
+                to="/offers" 
+                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Offers
+              </Link>
+              <Link 
+                to="/thyrocare-package" 
+                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Thyrocare Package
+              </Link>
+              <Link 
+                to="/thyrocare-profile" 
+                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Thyrocare Profile
+              </Link>
+              <Link 
+                to="/blood-test" 
+                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Blood Test
+              </Link>
+              <Link 
+                to="/diagnostic-centres" 
+                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Diagnostic Centres
+              </Link>
+              <Link 
+                to="/blog" 
+                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Blog
+              </Link>
+              <Link 
+                to="/shop" 
+                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Shop
+              </Link>
+              <Link 
+                to="/admin" 
+                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Admin
+              </Link>
+              <div className="flex flex-col space-y-2 pt-4">
+                <Button variant="medical-outline" size="sm">
+                  Login
+                </Button>
+                <Button variant="medical" size="sm">
+                  Sign Up
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </nav>
     </header>
   );

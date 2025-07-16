@@ -4,6 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ServiceProvider } from "@/contexts/ServiceContext";
+import { ContactProvider } from "@/contexts/ContactContext";
+import { AdminProvider } from "@/contexts/AdminContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Offers from "./pages/Offers";
@@ -21,26 +23,30 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <ServiceProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/offers" element={<Offers />} />
-            <Route path="/thyrocare-package" element={<ThyrocarePackage />} />
-            <Route path="/thyrocare-profile" element={<ThyrocareProfile />} />
-            <Route path="/blood-test" element={<BloodTest />} />
-            <Route path="/diagnostic-centres" element={<DiagnosticCentres />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/service/:id" element={<ServiceDetails />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </ServiceProvider>
+      <ContactProvider>
+        <AdminProvider>
+          <ServiceProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/offers" element={<Offers />} />
+                <Route path="/thyrocare-package" element={<ThyrocarePackage />} />
+                <Route path="/thyrocare-profile" element={<ThyrocareProfile />} />
+                <Route path="/blood-test" element={<BloodTest />} />
+                <Route path="/diagnostic-centres" element={<DiagnosticCentres />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/shop" element={<Shop />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/service/:id" element={<ServiceDetails />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </ServiceProvider>
+        </AdminProvider>
+      </ContactProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

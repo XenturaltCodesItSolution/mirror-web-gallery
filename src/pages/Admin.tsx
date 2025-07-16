@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useServices, Service } from '@/contexts/ServiceContext';
+import { useContactInfo } from '@/contexts/ContactContext';
+import { useAdmin } from '@/contexts/AdminContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -8,14 +10,19 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
-import { Plus, Edit, Trash2, Upload, X } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Plus, Edit, Trash2, Upload, X, LogOut, Settings, Phone, Mail, MapPin, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export const Admin = () => {
   const { services, addService, updateService, deleteService } = useServices();
+  const { contactInfo, updateContactInfo } = useContactInfo();
+  const { isLoggedIn, login, logout } = useAdmin();
   const { toast } = useToast();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
+  const [loginForm, setLoginForm] = useState({ username: '', password: '' });
+  const [contactForm, setContactForm] = useState(contactInfo);
   
   const [formData, setFormData] = useState({
     title: '',
@@ -52,6 +59,74 @@ export const Admin = () => {
       additionalImages: ['']
     });
   };
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    const success = login(loginForm.username, loginForm.password);
+    if (success) {
+      toast({
+        title: "Login successful",
+        description: "Welcome to admin panel."
+      });
+    } else {
+      toast({
+        title: "Login failed",
+        description: "Invalid username or password.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleContactUpdate = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateContactInfo(contactForm);
+    toast({
+      title: "Contact info updated",
+      description: "Contact information has been updated successfully."
+    });
+  };
+
+  // If not logged in, show login form
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-center">Admin Login</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  value={loginForm.username}
+                  onChange={(e) => setLoginForm(prev => ({ ...prev, username: e.target.value }))}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={loginForm.password}
+                  onChange={(e) => setLoginForm(prev => ({ ...prev, password: e.target.value }))}
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full">
+                Login
+              </Button>
+              <p className="text-sm text-gray-600 text-center">
+                Demo credentials: admin / admin123
+              </p>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -379,77 +454,207 @@ export const Admin = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Service Management</h1>
-        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Add New Service
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Add New Service</DialogTitle>
-            </DialogHeader>
-            <ServiceForm />
-          </DialogContent>
-        </Dialog>
+        <h1 className="text-3xl font-bold text-gray-900">Admin Panel</h1>
+        <Button onClick={logout} variant="outline">
+          <LogOut className="w-4 h-4 mr-2" />
+          Logout
+        </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {services.map((service) => (
-          <Card key={service.id} className="relative">
-            <CardHeader>
-              <div className="flex justify-between items-start">
-                <div>
-                  <CardTitle className="text-lg">{service.title}</CardTitle>
-                  <Badge variant="outline" className="mt-1">
-                    {service.category}
-                  </Badge>
-                  {service.isPopular && (
-                    <Badge className="ml-2 bg-medical-red text-white">Popular</Badge>
+      <Tabs defaultValue="services" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="services">Services</TabsTrigger>
+          <TabsTrigger value="contact">Contact Info</TabsTrigger>
+          <TabsTrigger value="content">Content</TabsTrigger>
+          <TabsTrigger value="settings">Settings</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="services" className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold">Service Management</h2>
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add New Service
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>Add New Service</DialogTitle>
+                </DialogHeader>
+                <ServiceForm />
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {services.map((service) => (
+              <Card key={service.id} className="relative">
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle className="text-lg">{service.title}</CardTitle>
+                      <Badge variant="outline" className="mt-1">
+                        {service.category}
+                      </Badge>
+                      {service.isPopular && (
+                        <Badge className="ml-2 bg-medical-red text-white">Popular</Badge>
+                      )}
+                    </div>
+                    <div className="flex space-x-1">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEdit(service)}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDelete(service.id)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600 mb-4 line-clamp-3">
+                    {service.description}
+                  </p>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="font-bold text-medical-blue">{service.price}</span>
+                    <span>{service.duration}</span>
+                    <span>★ {service.rating}</span>
+                  </div>
+                  {service.image && (
+                    <div className="mt-2">
+                      <img
+                        src={service.image}
+                        alt={service.imageAlt}
+                        className="w-full h-24 object-cover rounded"
+                      />
+                    </div>
                   )}
-                </div>
-                <div className="flex space-x-1">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleEdit(service)}
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleDelete(service.id)}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="contact" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="w-5 h-5" />
+                Contact Information Management
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-600 mb-4 line-clamp-3">
-                {service.description}
-              </p>
-              <div className="flex justify-between items-center text-sm">
-                <span className="font-bold text-medical-blue">{service.price}</span>
-                <span>{service.duration}</span>
-                <span>★ {service.rating}</span>
-              </div>
-              {service.image && (
-                <div className="mt-2">
-                  <img
-                    src={service.image}
-                    alt={service.imageAlt}
-                    className="w-full h-24 object-cover rounded"
+              <form onSubmit={handleContactUpdate} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="phone" className="flex items-center gap-2">
+                      <Phone className="w-4 h-4" />
+                      Phone Number
+                    </Label>
+                    <Input
+                      id="phone"
+                      value={contactForm.phone}
+                      onChange={(e) => setContactForm(prev => ({ ...prev, phone: e.target.value }))}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email" className="flex items-center gap-2">
+                      <Mail className="w-4 h-4" />
+                      Email
+                    </Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={contactForm.email}
+                      onChange={(e) => setContactForm(prev => ({ ...prev, email: e.target.value }))}
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="address" className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4" />
+                    Address
+                  </Label>
+                  <Input
+                    id="address"
+                    value={contactForm.address}
+                    onChange={(e) => setContactForm(prev => ({ ...prev, address: e.target.value }))}
+                    required
                   />
                 </div>
-              )}
+                <div>
+                  <Label htmlFor="businessHours" className="flex items-center gap-2">
+                    <Clock className="w-4 h-4" />
+                    Business Hours
+                  </Label>
+                  <Input
+                    id="businessHours"
+                    value={contactForm.businessHours}
+                    onChange={(e) => setContactForm(prev => ({ ...prev, businessHours: e.target.value }))}
+                    required
+                  />
+                </div>
+                <Button type="submit">
+                  Update Contact Information
+                </Button>
+              </form>
             </CardContent>
           </Card>
-        ))}
-      </div>
+        </TabsContent>
+
+        <TabsContent value="content" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Content Management</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600">Website content management features coming soon...</p>
+              <div className="mt-4 space-y-2">
+                <p className="text-sm">Future features:</p>
+                <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                  <li>Homepage banner content</li>
+                  <li>About us section</li>
+                  <li>Testimonials management</li>
+                  <li>FAQ management</li>
+                  <li>Blog post management</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="settings" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Website Settings</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600">General website settings coming soon...</p>
+              <div className="mt-4 space-y-2">
+                <p className="text-sm">Future features:</p>
+                <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                  <li>Site theme and branding</li>
+                  <li>SEO settings</li>
+                  <li>Analytics configuration</li>
+                  <li>User management</li>
+                  <li>Backup and restore</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
       {/* Edit Dialog */}
       {editingService && (
