@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Phone, Mail, Clock } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const Header = () => {
   return (
@@ -37,30 +38,33 @@ export const Header = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-6">
-            <a href="/" className="text-gray-700 hover:text-medical-blue transition-colors">
+            <Link to="/" className="text-gray-700 hover:text-medical-blue transition-colors">
               Home
-            </a>
-            <a href="/offers" className="text-gray-700 hover:text-medical-blue transition-colors">
+            </Link>
+            <Link to="/offers" className="text-gray-700 hover:text-medical-blue transition-colors">
               Offers
-            </a>
-            <a href="/thyrocare-package" className="text-gray-700 hover:text-medical-blue transition-colors">
+            </Link>
+            <Link to="/thyrocare-package" className="text-gray-700 hover:text-medical-blue transition-colors">
               Thyrocare Package
-            </a>
-            <a href="/thyrocare-profile" className="text-gray-700 hover:text-medical-blue transition-colors">
+            </Link>
+            <Link to="/thyrocare-profile" className="text-gray-700 hover:text-medical-blue transition-colors">
               Thyrocare Profile
-            </a>
-            <a href="/blood-test" className="text-gray-700 hover:text-medical-blue transition-colors">
+            </Link>
+            <Link to="/blood-test" className="text-gray-700 hover:text-medical-blue transition-colors">
               Blood Test
-            </a>
-            <a href="/diagnostic-centres" className="text-gray-700 hover:text-medical-blue transition-colors">
+            </Link>
+            <Link to="/diagnostic-centres" className="text-gray-700 hover:text-medical-blue transition-colors">
               Diagnostic Centres
-            </a>
-            <a href="/blog" className="text-gray-700 hover:text-medical-blue transition-colors">
+            </Link>
+            <Link to="/blog" className="text-gray-700 hover:text-medical-blue transition-colors">
               Blog
-            </a>
-            <a href="/shop" className="text-gray-700 hover:text-medical-blue transition-colors">
+            </Link>
+            <Link to="/shop" className="text-gray-700 hover:text-medical-blue transition-colors">
               Shop
-            </a>
+            </Link>
+            <Link to="/admin" className="text-gray-700 hover:text-medical-blue transition-colors">
+              Admin
+            </Link>
           </div>
 
           <div className="flex items-center space-x-3">

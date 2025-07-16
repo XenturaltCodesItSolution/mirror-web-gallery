@@ -2,8 +2,10 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Users, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface ServiceCardProps {
+  id: string;
   title: string;
   description: string;
   price: string;
@@ -13,9 +15,11 @@ interface ServiceCardProps {
   isPopular?: boolean;
   category: string;
   imageAlt: string;
+  image?: string;
 }
 
 export const ServiceCard = ({
+  id,
   title,
   description,
   price,
@@ -24,7 +28,8 @@ export const ServiceCard = ({
   patients,
   isPopular = false,
   category,
-  imageAlt
+  imageAlt,
+  image
 }: ServiceCardProps) => {
   return (
     <Card className="relative group hover:shadow-xl transition-all duration-300 border-2 hover:border-medical-blue">
@@ -35,14 +40,22 @@ export const ServiceCard = ({
       )}
       
       <CardHeader className="pb-4">
-        {/* Image placeholder */}
-        <div className="aspect-[4/3] bg-gradient-to-br from-medical-blue-light to-white rounded-lg mb-4 flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-16 h-16 bg-medical-blue rounded-full flex items-center justify-center mx-auto mb-2">
-              <span className="text-white text-2xl font-bold">{category.charAt(0)}</span>
+        {/* Image */}
+        <div className="aspect-[4/3] bg-gradient-to-br from-medical-blue-light to-white rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+          {image ? (
+            <img
+              src={image}
+              alt={imageAlt}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="text-center">
+              <div className="w-16 h-16 bg-medical-blue rounded-full flex items-center justify-center mx-auto mb-2">
+                <span className="text-white text-2xl font-bold">{category.charAt(0)}</span>
+              </div>
+              <p className="text-sm text-gray-500">{imageAlt}</p>
             </div>
-            <p className="text-sm text-gray-500">{imageAlt}</p>
-          </div>
+          )}
         </div>
         
         <div className="space-y-2">
@@ -92,8 +105,10 @@ export const ServiceCard = ({
             </Button>
           </div>
           
-          <Button variant="outline" className="w-full text-sm">
-            View Details
+          <Button variant="outline" className="w-full text-sm" asChild>
+            <Link to={`/service/${id}`}>
+              View Details
+            </Link>
           </Button>
         </div>
       </CardContent>
