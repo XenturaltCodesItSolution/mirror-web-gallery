@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useServices, Service } from '@/contexts/ServiceContext';
 import { useContactInfo } from '@/contexts/ContactContext';
 import { useAdmin } from '@/contexts/AdminContext';
+import { useSiteSettings } from '@/contexts/SiteSettingsContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -17,12 +18,23 @@ import { useToast } from '@/hooks/use-toast';
 export const Admin = () => {
   const { services, addService, updateService, deleteService } = useServices();
   const { contactInfo, updateContactInfo } = useContactInfo();
+  const { siteSettings, updateSiteSettings } = useSiteSettings();
   const { isLoggedIn, login, logout } = useAdmin();
   const { toast } = useToast();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [contactForm, setContactForm] = useState(contactInfo);
+  const [siteForm, setSiteForm] = useState(siteSettings);
+
+  // Update forms when context changes
+  useEffect(() => {
+    setContactForm(contactInfo);
+  }, [contactInfo]);
+
+  useEffect(() => {
+    setSiteForm(siteSettings);
+  }, [siteSettings]);
   
   const [formData, setFormData] = useState({
     title: '',
@@ -83,6 +95,15 @@ export const Admin = () => {
     toast({
       title: "Contact info updated",
       description: "Contact information has been updated successfully."
+    });
+  };
+
+  const handleSiteSettingsUpdate = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateSiteSettings(siteForm);
+    toast({
+      title: "Site settings updated",
+      description: "Website settings have been updated successfully."
     });
   };
 
@@ -637,20 +658,71 @@ export const Admin = () => {
         <TabsContent value="settings" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Website Settings</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="w-5 h-5" />
+                Website Settings
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">General website settings coming soon...</p>
-              <div className="mt-4 space-y-2">
-                <p className="text-sm">Future features:</p>
-                <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-                  <li>Site theme and branding</li>
-                  <li>SEO settings</li>
-                  <li>Analytics configuration</li>
-                  <li>User management</li>
-                  <li>Backup and restore</li>
-                </ul>
-              </div>
+              <form onSubmit={handleSiteSettingsUpdate} className="space-y-4">
+                <div>
+                  <Label htmlFor="websiteName">Website Name</Label>
+                  <Input
+                    id="websiteName"
+                    value={siteForm.websiteName}
+                    onChange={(e) => setSiteForm(prev => ({ ...prev, websiteName: e.target.value }))}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="logoUrl">Logo URL</Label>
+                  <Input
+                    id="logoUrl"
+                    value={siteForm.logoUrl}
+                    onChange={(e) => setSiteForm(prev => ({ ...prev, logoUrl: e.target.value }))}
+                    placeholder="https://example.com/logo.png"
+                  />
+                  {siteForm.logoUrl && (
+                    <div className="mt-2">
+                      <img
+                        src={siteForm.logoUrl}
+                        alt="Logo preview"
+                        className="w-16 h-16 object-cover rounded border"
+                      />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="bannerUrl">Banner/Hero Image URL</Label>
+                  <Input
+                    id="bannerUrl"
+                    value={siteForm.bannerUrl}
+                    onChange={(e) => setSiteForm(prev => ({ ...prev, bannerUrl: e.target.value }))}
+                    placeholder="https://example.com/banner.jpg"
+                  />
+                  {siteForm.bannerUrl && (
+                    <div className="mt-2">
+                      <img
+                        src={siteForm.bannerUrl}
+                        alt="Banner preview"
+                        className="w-full h-32 object-cover rounded border"
+                      />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="favicon">Favicon URL</Label>
+                  <Input
+                    id="favicon"
+                    value={siteForm.favicon}
+                    onChange={(e) => setSiteForm(prev => ({ ...prev, favicon: e.target.value }))}
+                    placeholder="https://example.com/favicon.ico"
+                  />
+                </div>
+                <Button type="submit">
+                  Update Website Settings
+                </Button>
+              </form>
             </CardContent>
           </Card>
         </TabsContent>

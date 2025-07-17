@@ -3,10 +3,12 @@ import { Phone, Mail, Clock, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useContactInfo } from "@/contexts/ContactContext";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 
 export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { contactInfo } = useContactInfo();
+  const { siteSettings } = useSiteSettings();
 
   return (
     <header className="bg-white shadow-md">
@@ -34,11 +36,15 @@ export const Header = () => {
       <nav className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-medical-blue rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">M</span>
-            </div>
+            {siteSettings.logoUrl ? (
+              <img src={siteSettings.logoUrl} alt="Logo" className="w-10 h-10 rounded-full object-cover" />
+            ) : (
+              <div className="w-10 h-10 bg-medical-blue rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-lg">{siteSettings.websiteName.charAt(0)}</span>
+              </div>
+            )}
             <h1 className="text-xl md:text-2xl font-bold text-medical-blue">
-              Medical Consultation
+              {siteSettings.websiteName}
             </h1>
           </div>
 
@@ -161,11 +167,13 @@ export const Header = () => {
               >
                 Admin
               </Link>
-              <div className="flex flex-col space-y-2 pt-4">
-                <Button variant="medical-outline" size="sm">
+              
+              {/* Auth buttons moved below menu items */}
+              <div className="flex flex-col space-y-2 pt-4 px-4">
+                <Button variant="medical-outline" size="sm" className="w-full">
                   Login
                 </Button>
-                <Button variant="medical" size="sm">
+                <Button variant="medical" size="sm" className="w-full">
                   Sign Up
                 </Button>
               </div>
