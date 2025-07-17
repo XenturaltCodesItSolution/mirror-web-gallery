@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Phone, Mail, MapPin, Shield, Heart, Users } from "lucide-react";
+import { useContactInfo } from "@/contexts/ContactContext";
 
 export const Footer = () => {
+  const { contactInfo } = useContactInfo();
+  
   return (
     <footer className="bg-gray-900 text-white">
       {/* Main footer content */}
@@ -63,17 +66,16 @@ export const Footer = () => {
             <div className="space-y-3 text-sm">
               <div className="flex items-center space-x-2">
                 <Phone className="w-4 h-4 text-medical-blue" />
-                <span>0120-123-456</span>
+                <span>{contactInfo.phone}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="w-4 h-4 text-medical-blue" />
-                <span>info@medical-consult.com</span>
+                <span>{contactInfo.email}</span>
               </div>
               <div className="flex items-start space-x-2">
                 <MapPin className="w-4 h-4 text-medical-blue mt-0.5" />
                 <div>
-                  <p>123 Medical Center Drive</p>
-                  <p>New York, NY 10001</p>
+                  <p>{contactInfo.address}</p>
                 </div>
               </div>
             </div>

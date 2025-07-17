@@ -3,8 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
+import { useContactInfo } from "@/contexts/ContactContext";
 
 export const ContactSection = () => {
+  const { contactInfo } = useContactInfo();
+  
   return (
     <section id="contact" className="py-16 bg-white">
       <div className="container mx-auto px-4">
@@ -86,7 +89,7 @@ export const ContactSection = () => {
                     <Phone className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-medical-blue">0120-123-456</p>
+                    <p className="text-2xl font-bold text-medical-blue">{contactInfo.phone}</p>
                     <p className="text-gray-600">Toll Free</p>
                   </div>
                 </div>
@@ -97,8 +100,7 @@ export const ContactSection = () => {
                   </div>
                   <div>
                     <p className="font-medium">Business Hours</p>
-                    <p className="text-gray-600">Weekdays 9:00 - 18:00</p>
-                    <p className="text-gray-600">Saturday 9:00 - 14:00</p>
+                    <p className="text-gray-600">{contactInfo.businessHours}</p>
                   </div>
                 </div>
               </CardContent>
@@ -117,7 +119,7 @@ export const ContactSection = () => {
                   </div>
                   <div>
                     <p className="font-medium">Email</p>
-                    <p className="text-medical-blue">info@medical-consult.com</p>
+                    <p className="text-medical-blue">{contactInfo.email}</p>
                   </div>
                 </div>
                 
@@ -127,8 +129,7 @@ export const ContactSection = () => {
                   </div>
                   <div>
                     <p className="font-medium">Location</p>
-                    <p className="text-gray-600">123 Medical Center Drive</p>
-                    <p className="text-gray-600">New York, NY 10001</p>
+                    <p className="text-gray-600">{contactInfo.address}</p>
                   </div>
                 </div>
               </CardContent>
