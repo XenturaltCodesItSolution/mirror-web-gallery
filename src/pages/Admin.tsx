@@ -3,6 +3,8 @@ import { useServices, Service } from '@/contexts/ServiceContext';
 import { useContactInfo } from '@/contexts/ContactContext';
 import { useAdmin } from '@/contexts/AdminContext';
 import { useSiteSettings } from '@/contexts/SiteSettingsContext';
+import { useMenu } from '@/contexts/MenuContext';
+import { useBackgroundImages } from '@/contexts/BackgroundContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -19,6 +21,8 @@ export const Admin = () => {
   const { services, addService, updateService, deleteService } = useServices();
   const { contactInfo, updateContactInfo } = useContactInfo();
   const { siteSettings, updateSiteSettings } = useSiteSettings();
+  const { menuItems, addMenuItem, updateMenuItem, deleteMenuItem } = useMenu();
+  const { backgroundImages, addBackgroundImage, updateBackgroundImage, deleteBackgroundImage } = useBackgroundImages();
   const { isLoggedIn, login, logout } = useAdmin();
   const { toast } = useToast();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -26,6 +30,20 @@ export const Admin = () => {
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [contactForm, setContactForm] = useState(contactInfo);
   const [siteForm, setSiteForm] = useState(siteSettings);
+
+  // State for new menu item form
+  const [newMenuItem, setNewMenuItem] = useState({
+    title: '',
+    path: '',
+    order: menuItems.length + 1
+  });
+
+  // State for new background image form
+  const [newBackgroundImage, setNewBackgroundImage] = useState({
+    url: '',
+    alt: '',
+    order: backgroundImages.length + 1
+  });
 
   // Update forms when context changes
   useEffect(() => {
@@ -483,12 +501,14 @@ export const Admin = () => {
       </div>
 
       <Tabs defaultValue="services" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="services">Services</TabsTrigger>
-          <TabsTrigger value="contact">Contact Info</TabsTrigger>
-          <TabsTrigger value="content">Content</TabsTrigger>
-          <TabsTrigger value="settings">Settings</TabsTrigger>
-        </TabsList>
+            <TabsList className="grid w-full grid-cols-6">
+              <TabsTrigger value="services">Services</TabsTrigger>
+              <TabsTrigger value="contact">Contact Info</TabsTrigger>
+              <TabsTrigger value="menu">Menu</TabsTrigger>
+              <TabsTrigger value="backgrounds">Backgrounds</TabsTrigger>
+              <TabsTrigger value="content">Content</TabsTrigger>
+              <TabsTrigger value="settings">Settings</TabsTrigger>
+            </TabsList>
 
         <TabsContent value="services" className="space-y-6">
           <div className="flex justify-between items-center">
@@ -630,6 +650,243 @@ export const Admin = () => {
                   Update Contact Information
                 </Button>
               </form>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Menu Management Tab */}
+        <TabsContent value="menu" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Menu Management</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Add New Menu Item */}
+              <div className="border rounded-lg p-4 space-y-4">
+                <h3 className="font-semibold">Add New Menu Item</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="menu-title">Title</Label>
+                    <Input
+                      id="menu-title"
+                      placeholder="Menu Title"
+                      value={newMenuItem.title}
+                      onChange={(e) => setNewMenuItem(prev => ({...prev, title: e.target.value}))}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="menu-path">Path</Label>
+                    <Input
+                      id="menu-path"
+                      placeholder="/page-url"
+                      value={newMenuItem.path}
+                      onChange={(e) => setNewMenuItem(prev => ({...prev, path: e.target.value}))}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="menu-order">Order</Label>
+                    <Input
+                      id="menu-order"
+                      type="number"
+                      placeholder="1"
+                      value={newMenuItem.order}
+                      onChange={(e) => setNewMenuItem(prev => ({...prev, order: parseInt(e.target.value) || 1}))}
+                    />
+                  </div>
+                </div>
+                <Button 
+                  onClick={() => {
+                    if (newMenuItem.title && newMenuItem.path) {
+                      addMenuItem(newMenuItem);
+                      setNewMenuItem({ title: '', path: '', order: menuItems.length + 1 });
+                      toast({
+                        title: "Menu item added",
+                        description: "Menu item has been added successfully."
+                      });
+                    } else {
+                      toast({
+                        title: "Error",
+                        description: "Please fill in all fields",
+                        variant: "destructive"
+                      });
+                    }
+                  }}
+                  className="w-full"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Menu Item
+                </Button>
+              </div>
+
+              {/* Existing Menu Items */}
+              <div className="space-y-4">
+                <h3 className="font-semibold">Current Menu Items</h3>
+                {menuItems.map((item) => (
+                  <div key={item.id} className="border rounded-lg p-4 space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <Label>Title</Label>
+                        <Input
+                          value={item.title}
+                          onChange={(e) => updateMenuItem(item.id, { title: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <Label>Path</Label>
+                        <Input
+                          value={item.path}
+                          onChange={(e) => updateMenuItem(item.id, { path: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <Label>Order</Label>
+                        <Input
+                          type="number"
+                          value={item.order}
+                          onChange={(e) => updateMenuItem(item.id, { order: parseInt(e.target.value) || 1 })}
+                        />
+                      </div>
+                    </div>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => {
+                        deleteMenuItem(item.id);
+                        toast({
+                          title: "Menu item deleted",
+                          description: "Menu item has been deleted successfully."
+                        });
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Background Images Tab */}
+        <TabsContent value="backgrounds" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Background Images Management</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Add New Background Image */}
+              <div className="border rounded-lg p-4 space-y-4">
+                <h3 className="font-semibold">Add New Background Image</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="bg-url">Image URL</Label>
+                    <Input
+                      id="bg-url"
+                      placeholder="https://example.com/image.jpg"
+                      value={newBackgroundImage.url}
+                      onChange={(e) => setNewBackgroundImage(prev => ({...prev, url: e.target.value}))}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="bg-alt">Alt Text</Label>
+                    <Input
+                      id="bg-alt"
+                      placeholder="Image description"
+                      value={newBackgroundImage.alt}
+                      onChange={(e) => setNewBackgroundImage(prev => ({...prev, alt: e.target.value}))}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="bg-order">Order</Label>
+                    <Input
+                      id="bg-order"
+                      type="number"
+                      placeholder="1"
+                      value={newBackgroundImage.order}
+                      onChange={(e) => setNewBackgroundImage(prev => ({...prev, order: parseInt(e.target.value) || 1}))}
+                    />
+                  </div>
+                </div>
+                <Button 
+                  onClick={() => {
+                    if (newBackgroundImage.url && newBackgroundImage.alt) {
+                      addBackgroundImage(newBackgroundImage);
+                      setNewBackgroundImage({ url: '', alt: '', order: backgroundImages.length + 1 });
+                      toast({
+                        title: "Background image added",
+                        description: "Background image has been added successfully."
+                      });
+                    } else {
+                      toast({
+                        title: "Error",
+                        description: "Please fill in all fields",
+                        variant: "destructive"
+                      });
+                    }
+                  }}
+                  className="w-full"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Background Image
+                </Button>
+              </div>
+
+              {/* Existing Background Images */}
+              <div className="space-y-4">
+                <h3 className="font-semibold">Current Background Images</h3>
+                {backgroundImages.map((image) => (
+                  <div key={image.id} className="border rounded-lg p-4 space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label>Image URL</Label>
+                        <Input
+                          value={image.url}
+                          onChange={(e) => updateBackgroundImage(image.id, { url: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <Label>Alt Text</Label>
+                        <Input
+                          value={image.alt}
+                          onChange={(e) => updateBackgroundImage(image.id, { alt: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="flex-1">
+                        <Label>Order</Label>
+                        <Input
+                          type="number"
+                          value={image.order}
+                          onChange={(e) => updateBackgroundImage(image.id, { order: parseInt(e.target.value) || 1 })}
+                        />
+                      </div>
+                      <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
+                        <img
+                          src={image.url}
+                          alt={image.alt}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </div>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => {
+                        deleteBackgroundImage(image.id);
+                        toast({
+                          title: "Background image deleted",
+                          description: "Background image has been deleted successfully."
+                        });
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete
+                    </Button>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

@@ -4,11 +4,13 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useContactInfo } from "@/contexts/ContactContext";
 import { useSiteSettings } from "@/contexts/SiteSettingsContext";
+import { useMenu } from "@/contexts/MenuContext";
 
 export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { contactInfo } = useContactInfo();
   const { siteSettings } = useSiteSettings();
+  const { menuItems } = useMenu();
 
   return (
     <header className="bg-white shadow-md">
@@ -50,30 +52,15 @@ export const Header = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link to="/" className="text-gray-700 hover:text-medical-blue transition-colors">
-              Home
-            </Link>
-            <Link to="/offers" className="text-gray-700 hover:text-medical-blue transition-colors">
-              Offers
-            </Link>
-            <Link to="/thyrocare-package" className="text-gray-700 hover:text-medical-blue transition-colors">
-              Thyrocare Package
-            </Link>
-            <Link to="/thyrocare-profile" className="text-gray-700 hover:text-medical-blue transition-colors">
-              Thyrocare Profile
-            </Link>
-            <Link to="/blood-test" className="text-gray-700 hover:text-medical-blue transition-colors">
-              Blood Test
-            </Link>
-            <Link to="/diagnostic-centres" className="text-gray-700 hover:text-medical-blue transition-colors">
-              Diagnostic Centres
-            </Link>
-            <Link to="/blog" className="text-gray-700 hover:text-medical-blue transition-colors">
-              Blog
-            </Link>
-            <Link to="/shop" className="text-gray-700 hover:text-medical-blue transition-colors">
-              Shop
-            </Link>
+            {menuItems.map((item) => (
+              <Link 
+                key={item.id}
+                to={item.path} 
+                className="text-gray-700 hover:text-medical-blue transition-colors"
+              >
+                {item.title}
+              </Link>
+            ))}
             <Link to="/admin" className="text-gray-700 hover:text-medical-blue transition-colors">
               Admin
             </Link>
@@ -104,62 +91,16 @@ export const Header = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-gray-200">
             <div className="flex flex-col space-y-2 pt-4">
-              <Link 
-                to="/" 
-                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Home
-              </Link>
-              <Link 
-                to="/offers" 
-                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Offers
-              </Link>
-              <Link 
-                to="/thyrocare-package" 
-                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Thyrocare Package
-              </Link>
-              <Link 
-                to="/thyrocare-profile" 
-                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Thyrocare Profile
-              </Link>
-              <Link 
-                to="/blood-test" 
-                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Blood Test
-              </Link>
-              <Link 
-                to="/diagnostic-centres" 
-                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Diagnostic Centres
-              </Link>
-              <Link 
-                to="/blog" 
-                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Blog
-              </Link>
-              <Link 
-                to="/shop" 
-                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Shop
-              </Link>
+              {menuItems.map((item) => (
+                <Link 
+                  key={item.id}
+                  to={item.path} 
+                  className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {item.title}
+                </Link>
+              ))}
               <Link 
                 to="/admin" 
                 className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"

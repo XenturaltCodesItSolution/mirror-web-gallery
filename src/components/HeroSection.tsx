@@ -2,20 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Clock, Shield, Users, Stethoscope } from "lucide-react";
 import { useSiteSettings } from "@/contexts/SiteSettingsContext";
+import { BackgroundCarousel } from "@/components/BackgroundCarousel";
 
 export const HeroSection = () => {
   const { siteSettings } = useSiteSettings();
   
   return (
-    <section 
-      className="bg-gradient-to-br from-medical-blue-light to-white py-16"
-      style={siteSettings.bannerUrl ? {
-        backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.85)), url(${siteSettings.bannerUrl})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
-      } : {}}
-    >
-      <div className="container mx-auto px-4">
+    <section className="relative py-16 min-h-[600px] overflow-hidden">
+      <BackgroundCarousel />
+      <div className="container mx-auto px-4 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left content */}
           <div className="space-y-6">
