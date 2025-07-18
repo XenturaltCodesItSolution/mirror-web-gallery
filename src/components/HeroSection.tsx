@@ -3,9 +3,11 @@ import { Card } from "@/components/ui/card";
 import { Clock, Shield, Users, Stethoscope } from "lucide-react";
 import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 import { BackgroundCarousel } from "@/components/BackgroundCarousel";
+import { useContent } from "@/contexts/ContentContext";
 
 export const HeroSection = () => {
   const { siteSettings } = useSiteSettings();
+  const { bannerContent, aboutSection } = useContent();
   
   return (
     <section className="relative py-16 min-h-[600px] overflow-hidden">
@@ -19,50 +21,36 @@ export const HeroSection = () => {
             </div>
             
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-              Trusted Medical Care with
-              <span className="text-medical-blue"> Online Consultation</span>
+              {bannerContent.title}
+              <span className="text-medical-blue"> {bannerContent.subtitle}</span>
             </h1>
             
             <p className="text-xl text-gray-600 leading-relaxed">
-              High-quality medical services provided by experienced specialists, 
-              accessible safely and conveniently from your home.
+              {bannerContent.description}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Button variant="medical" size="lg" className="text-lg px-8 py-6">
-                Book Consultation Now
+                {bannerContent.primaryButtonText}
               </Button>
               <Button variant="medical-outline" size="lg" className="text-lg px-8 py-6">
-                View Our Doctors
+                {bannerContent.secondaryButtonText}
               </Button>
             </div>
 
             {/* Features */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-8">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-medical-blue rounded-full flex items-center justify-center mx-auto mb-2">
-                  <Clock className="w-6 h-6 text-white" />
+              {aboutSection.features.map((feature, index) => (
+                <div key={index} className="text-center">
+                  <div className="w-12 h-12 bg-medical-blue rounded-full flex items-center justify-center mx-auto mb-2">
+                    {index === 0 && <Clock className="w-6 h-6 text-white" />}
+                    {index === 1 && <Shield className="w-6 h-6 text-white" />}
+                    {index === 2 && <Users className="w-6 h-6 text-white" />}
+                    {index === 3 && <Stethoscope className="w-6 h-6 text-white" />}
+                  </div>
+                  <p className="text-sm font-medium">{feature}</p>
                 </div>
-                <p className="text-sm font-medium">24/7 Available</p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-medical-red rounded-full flex items-center justify-center mx-auto mb-2">
-                  <Shield className="w-6 h-6 text-white" />
-                </div>
-                <p className="text-sm font-medium">Safe & Secure</p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-medical-blue rounded-full flex items-center justify-center mx-auto mb-2">
-                  <Users className="w-6 h-6 text-white" />
-                </div>
-                <p className="text-sm font-medium">Expert Doctors</p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-medical-red rounded-full flex items-center justify-center mx-auto mb-2">
-                  <Stethoscope className="w-6 h-6 text-white" />
-                </div>
-                <p className="text-sm font-medium">Quality Care</p>
-              </div>
+              ))}
             </div>
           </div>
 
@@ -80,9 +68,9 @@ export const HeroSection = () => {
               </div>
               
               <div className="mt-6 text-center">
-                <h3 className="text-xl font-bold text-gray-900">Expert Medical Care</h3>
+                <h3 className="text-xl font-bold text-gray-900">{aboutSection.title}</h3>
                 <p className="text-gray-600 mt-2">
-                  Specialists in each field provide careful examinations
+                  {aboutSection.description}
                 </p>
               </div>
             </Card>

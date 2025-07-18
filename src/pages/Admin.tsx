@@ -5,6 +5,7 @@ import { useAdmin } from '@/contexts/AdminContext';
 import { useSiteSettings } from '@/contexts/SiteSettingsContext';
 import { useMenu } from '@/contexts/MenuContext';
 import { useBackgroundImages } from '@/contexts/BackgroundContext';
+import { useContent } from '@/contexts/ContentContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -23,6 +24,11 @@ export const Admin = () => {
   const { siteSettings, updateSiteSettings } = useSiteSettings();
   const { menuItems, addMenuItem, updateMenuItem, deleteMenuItem } = useMenu();
   const { backgroundImages, addBackgroundImage, updateBackgroundImage, deleteBackgroundImage } = useBackgroundImages();
+  const { 
+    bannerContent, aboutSection, testimonials, faqs, blogPosts,
+    updateBannerContent, updateAboutSection, addTestimonial, updateTestimonial, deleteTestimonial,
+    addFAQ, updateFAQ, deleteFAQ, addBlogPost, updateBlogPost, deleteBlogPost 
+  } = useContent();
   const { isLoggedIn, login, logout } = useAdmin();
   const { toast } = useToast();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -43,6 +49,39 @@ export const Admin = () => {
     url: '',
     alt: '',
     order: backgroundImages.length + 1
+  });
+
+  // State for banner content form
+  const [bannerForm, setBannerForm] = useState(bannerContent);
+  const [aboutForm, setAboutForm] = useState(aboutSection);
+
+  // State for new testimonial form
+  const [newTestimonial, setNewTestimonial] = useState({
+    name: '',
+    role: '',
+    company: '',
+    content: '',
+    rating: 5,
+    imageUrl: ''
+  });
+
+  // State for new FAQ form
+  const [newFAQ, setNewFAQ] = useState({
+    question: '',
+    answer: '',
+    category: 'General'
+  });
+
+  // State for new blog post form
+  const [newBlogPost, setNewBlogPost] = useState({
+    title: '',
+    excerpt: '',
+    content: '',
+    author: '',
+    publishDate: new Date().toISOString().split('T')[0],
+    category: '',
+    imageUrl: '',
+    tags: []
   });
 
   // Update forms when context changes
@@ -891,22 +930,481 @@ export const Admin = () => {
           </Card>
         </TabsContent>
 
+        {/* Content Tab */}
         <TabsContent value="content" className="space-y-6">
+          {/* Banner Content Management */}
           <Card>
             <CardHeader>
-              <CardTitle>Content Management</CardTitle>
+              <CardTitle>Homepage Banner Content</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">Website content management features coming soon...</p>
-              <div className="mt-4 space-y-2">
-                <p className="text-sm">Future features:</p>
-                <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-                  <li>Homepage banner content</li>
-                  <li>About us section</li>
-                  <li>Testimonials management</li>
-                  <li>FAQ management</li>
-                  <li>Blog post management</li>
-                </ul>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="banner-title">Main Title</Label>
+                  <Input
+                    id="banner-title"
+                    value={bannerForm.title}
+                    onChange={(e) => setBannerForm(prev => ({...prev, title: e.target.value}))}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="banner-subtitle">Subtitle</Label>
+                  <Input
+                    id="banner-subtitle"
+                    value={bannerForm.subtitle}
+                    onChange={(e) => setBannerForm(prev => ({...prev, subtitle: e.target.value}))}
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="banner-description">Description</Label>
+                <Textarea
+                  id="banner-description"
+                  value={bannerForm.description}
+                  onChange={(e) => setBannerForm(prev => ({...prev, description: e.target.value}))}
+                  rows={3}
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="primary-btn">Primary Button Text</Label>
+                  <Input
+                    id="primary-btn"
+                    value={bannerForm.primaryButtonText}
+                    onChange={(e) => setBannerForm(prev => ({...prev, primaryButtonText: e.target.value}))}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="secondary-btn">Secondary Button Text</Label>
+                  <Input
+                    id="secondary-btn"
+                    value={bannerForm.secondaryButtonText}
+                    onChange={(e) => setBannerForm(prev => ({...prev, secondaryButtonText: e.target.value}))}
+                  />
+                </div>
+              </div>
+              <Button 
+                onClick={() => {
+                  updateBannerContent(bannerForm);
+                  toast({
+                    title: "Banner updated",
+                    description: "Homepage banner content has been updated successfully."
+                  });
+                }}
+                className="w-full"
+              >
+                Update Banner Content
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* About Section Management */}
+          <Card>
+            <CardHeader>
+              <CardTitle>About Us Section</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="about-title">Title</Label>
+                <Input
+                  id="about-title"
+                  value={aboutForm.title}
+                  onChange={(e) => setAboutForm(prev => ({...prev, title: e.target.value}))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="about-description">Description</Label>
+                <Textarea
+                  id="about-description"
+                  value={aboutForm.description}
+                  onChange={(e) => setAboutForm(prev => ({...prev, description: e.target.value}))}
+                  rows={3}
+                />
+              </div>
+              <div>
+                <Label htmlFor="about-image">Image URL</Label>
+                <Input
+                  id="about-image"
+                  value={aboutForm.imageUrl}
+                  onChange={(e) => setAboutForm(prev => ({...prev, imageUrl: e.target.value}))}
+                />
+              </div>
+              <div>
+                <Label>Features (comma-separated)</Label>
+                <Input
+                  value={aboutForm.features.join(', ')}
+                  onChange={(e) => setAboutForm(prev => ({...prev, features: e.target.value.split(', ').filter(f => f.trim())}))}
+                />
+              </div>
+              <Button 
+                onClick={() => {
+                  updateAboutSection(aboutForm);
+                  toast({
+                    title: "About section updated",
+                    description: "About us section has been updated successfully."
+                  });
+                }}
+                className="w-full"
+              >
+                Update About Section
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Testimonials Management */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Testimonials Management</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Add New Testimonial */}
+              <div className="border rounded-lg p-4 space-y-4">
+                <h3 className="font-semibold">Add New Testimonial</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Name</Label>
+                    <Input
+                      value={newTestimonial.name}
+                      onChange={(e) => setNewTestimonial(prev => ({...prev, name: e.target.value}))}
+                    />
+                  </div>
+                  <div>
+                    <Label>Role</Label>
+                    <Input
+                      value={newTestimonial.role}
+                      onChange={(e) => setNewTestimonial(prev => ({...prev, role: e.target.value}))}
+                    />
+                  </div>
+                  <div>
+                    <Label>Company</Label>
+                    <Input
+                      value={newTestimonial.company}
+                      onChange={(e) => setNewTestimonial(prev => ({...prev, company: e.target.value}))}
+                    />
+                  </div>
+                  <div>
+                    <Label>Rating</Label>
+                    <Input
+                      type="number"
+                      min="1"
+                      max="5"
+                      value={newTestimonial.rating}
+                      onChange={(e) => setNewTestimonial(prev => ({...prev, rating: parseInt(e.target.value) || 5}))}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label>Image URL</Label>
+                  <Input
+                    value={newTestimonial.imageUrl}
+                    onChange={(e) => setNewTestimonial(prev => ({...prev, imageUrl: e.target.value}))}
+                  />
+                </div>
+                <div>
+                  <Label>Testimonial Content</Label>
+                  <Textarea
+                    value={newTestimonial.content}
+                    onChange={(e) => setNewTestimonial(prev => ({...prev, content: e.target.value}))}
+                    rows={3}
+                  />
+                </div>
+                <Button 
+                  onClick={() => {
+                    if (newTestimonial.name && newTestimonial.content) {
+                      addTestimonial(newTestimonial);
+                      setNewTestimonial({ name: '', role: '', company: '', content: '', rating: 5, imageUrl: '' });
+                      toast({
+                        title: "Testimonial added",
+                        description: "New testimonial has been added successfully."
+                      });
+                    }
+                  }}
+                  className="w-full"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Testimonial
+                </Button>
+              </div>
+
+              {/* Existing Testimonials */}
+              <div className="space-y-4">
+                <h3 className="font-semibold">Current Testimonials</h3>
+                {testimonials.map((testimonial) => (
+                  <div key={testimonial.id} className="border rounded-lg p-4 space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label>Name</Label>
+                        <Input
+                          value={testimonial.name}
+                          onChange={(e) => updateTestimonial(testimonial.id, { name: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <Label>Role</Label>
+                        <Input
+                          value={testimonial.role}
+                          onChange={(e) => updateTestimonial(testimonial.id, { role: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label>Content</Label>
+                      <Textarea
+                        value={testimonial.content}
+                        onChange={(e) => updateTestimonial(testimonial.id, { content: e.target.value })}
+                        rows={2}
+                      />
+                    </div>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => {
+                        deleteTestimonial(testimonial.id);
+                        toast({
+                          title: "Testimonial deleted",
+                          description: "Testimonial has been deleted successfully."
+                        });
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* FAQ Management */}
+          <Card>
+            <CardHeader>
+              <CardTitle>FAQ Management</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Add New FAQ */}
+              <div className="border rounded-lg p-4 space-y-4">
+                <h3 className="font-semibold">Add New FAQ</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Question</Label>
+                    <Input
+                      value={newFAQ.question}
+                      onChange={(e) => setNewFAQ(prev => ({...prev, question: e.target.value}))}
+                    />
+                  </div>
+                  <div>
+                    <Label>Category</Label>
+                    <Input
+                      value={newFAQ.category}
+                      onChange={(e) => setNewFAQ(prev => ({...prev, category: e.target.value}))}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label>Answer</Label>
+                  <Textarea
+                    value={newFAQ.answer}
+                    onChange={(e) => setNewFAQ(prev => ({...prev, answer: e.target.value}))}
+                    rows={3}
+                  />
+                </div>
+                <Button 
+                  onClick={() => {
+                    if (newFAQ.question && newFAQ.answer) {
+                      addFAQ(newFAQ);
+                      setNewFAQ({ question: '', answer: '', category: 'General' });
+                      toast({
+                        title: "FAQ added",
+                        description: "New FAQ has been added successfully."
+                      });
+                    }
+                  }}
+                  className="w-full"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add FAQ
+                </Button>
+              </div>
+
+              {/* Existing FAQs */}
+              <div className="space-y-4">
+                <h3 className="font-semibold">Current FAQs</h3>
+                {faqs.map((faq) => (
+                  <div key={faq.id} className="border rounded-lg p-4 space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label>Question</Label>
+                        <Input
+                          value={faq.question}
+                          onChange={(e) => updateFAQ(faq.id, { question: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <Label>Category</Label>
+                        <Input
+                          value={faq.category}
+                          onChange={(e) => updateFAQ(faq.id, { category: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label>Answer</Label>
+                      <Textarea
+                        value={faq.answer}
+                        onChange={(e) => updateFAQ(faq.id, { answer: e.target.value })}
+                        rows={2}
+                      />
+                    </div>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => {
+                        deleteFAQ(faq.id);
+                        toast({
+                          title: "FAQ deleted",
+                          description: "FAQ has been deleted successfully."
+                        });
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Blog Post Management */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Blog Post Management</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Add New Blog Post */}
+              <div className="border rounded-lg p-4 space-y-4">
+                <h3 className="font-semibold">Add New Blog Post</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Title</Label>
+                    <Input
+                      value={newBlogPost.title}
+                      onChange={(e) => setNewBlogPost(prev => ({...prev, title: e.target.value}))}
+                    />
+                  </div>
+                  <div>
+                    <Label>Author</Label>
+                    <Input
+                      value={newBlogPost.author}
+                      onChange={(e) => setNewBlogPost(prev => ({...prev, author: e.target.value}))}
+                    />
+                  </div>
+                  <div>
+                    <Label>Category</Label>
+                    <Input
+                      value={newBlogPost.category}
+                      onChange={(e) => setNewBlogPost(prev => ({...prev, category: e.target.value}))}
+                    />
+                  </div>
+                  <div>
+                    <Label>Publish Date</Label>
+                    <Input
+                      type="date"
+                      value={newBlogPost.publishDate}
+                      onChange={(e) => setNewBlogPost(prev => ({...prev, publishDate: e.target.value}))}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label>Image URL</Label>
+                  <Input
+                    value={newBlogPost.imageUrl}
+                    onChange={(e) => setNewBlogPost(prev => ({...prev, imageUrl: e.target.value}))}
+                  />
+                </div>
+                <div>
+                  <Label>Excerpt</Label>
+                  <Textarea
+                    value={newBlogPost.excerpt}
+                    onChange={(e) => setNewBlogPost(prev => ({...prev, excerpt: e.target.value}))}
+                    rows={2}
+                  />
+                </div>
+                <div>
+                  <Label>Content</Label>
+                  <Textarea
+                    value={newBlogPost.content}
+                    onChange={(e) => setNewBlogPost(prev => ({...prev, content: e.target.value}))}
+                    rows={4}
+                  />
+                </div>
+                <Button 
+                  onClick={() => {
+                    if (newBlogPost.title && newBlogPost.content) {
+                      addBlogPost(newBlogPost);
+                      setNewBlogPost({
+                        title: '', excerpt: '', content: '', author: '',
+                        publishDate: new Date().toISOString().split('T')[0],
+                        category: '', imageUrl: '', tags: []
+                      });
+                      toast({
+                        title: "Blog post added",
+                        description: "New blog post has been added successfully."
+                      });
+                    }
+                  }}
+                  className="w-full"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Blog Post
+                </Button>
+              </div>
+
+              {/* Existing Blog Posts */}
+              <div className="space-y-4">
+                <h3 className="font-semibold">Current Blog Posts</h3>
+                {blogPosts.map((post) => (
+                  <div key={post.id} className="border rounded-lg p-4 space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label>Title</Label>
+                        <Input
+                          value={post.title}
+                          onChange={(e) => updateBlogPost(post.id, { title: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <Label>Author</Label>
+                        <Input
+                          value={post.author}
+                          onChange={(e) => updateBlogPost(post.id, { author: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label>Excerpt</Label>
+                      <Textarea
+                        value={post.excerpt}
+                        onChange={(e) => updateBlogPost(post.id, { excerpt: e.target.value })}
+                        rows={2}
+                      />
+                    </div>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => {
+                        deleteBlogPost(post.id);
+                        toast({
+                          title: "Blog post deleted",
+                          description: "Blog post has been deleted successfully."
+                        });
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete
+                    </Button>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>

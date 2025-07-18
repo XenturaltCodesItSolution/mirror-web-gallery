@@ -9,6 +9,7 @@ import { AdminProvider } from "@/contexts/AdminContext";
 import { SiteSettingsProvider } from "@/contexts/SiteSettingsContext";
 import { MenuProvider } from "@/contexts/MenuContext";
 import { BackgroundProvider } from "@/contexts/BackgroundContext";
+import { ContentProvider } from "@/contexts/ContentContext";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import Index from "./pages/Index";
@@ -34,6 +35,7 @@ const App = () => (
             <SiteSettingsProvider>
               <MenuProvider>
                 <BackgroundProvider>
+                  <ContentProvider>
               <Toaster />
               <Sonner />
               <BrowserRouter>
@@ -56,7 +58,8 @@ const App = () => (
                   </main>
                   <Footer />
                 </div>
-              </BrowserRouter>
+                  </BrowserRouter>
+                  </ContentProvider>
                 </BackgroundProvider>
               </MenuProvider>
             </SiteSettingsProvider>
