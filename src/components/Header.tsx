@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useContactInfo } from "@/contexts/ContactContext";
 import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 import { useMenu } from "@/contexts/MenuContext";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -13,7 +14,7 @@ export const Header = () => {
   const { menuItems } = useMenu();
 
   return (
-    <header className="bg-white shadow-md">
+    <header className="bg-background border-b shadow-md">
       {/* Top contact bar */}
       <div className="bg-medical-blue text-white py-2">
         <div className="container mx-auto px-4 flex justify-between items-center text-sm">
@@ -56,18 +57,19 @@ export const Header = () => {
               <Link 
                 key={item.id}
                 to={item.path} 
-                className="text-gray-700 hover:text-medical-blue transition-colors"
+                 className="text-foreground hover:text-medical-blue transition-colors"
               >
                 {item.title}
               </Link>
             ))}
-            <Link to="/admin" className="text-gray-700 hover:text-medical-blue transition-colors">
+            <Link to="/admin" className="text-foreground hover:text-medical-blue transition-colors">
               Admin
             </Link>
           </div>
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-3">
+            <ThemeToggle />
             <Button variant="medical-outline" size="sm">
               Login
             </Button>
@@ -89,13 +91,13 @@ export const Header = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-gray-200">
+          <div className="md:hidden mt-4 pb-4 border-t border-border">
             <div className="flex flex-col space-y-2 pt-4">
               {menuItems.map((item) => (
                 <Link 
                   key={item.id}
                   to={item.path} 
-                  className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
+                  className="text-foreground hover:text-medical-blue transition-colors py-2 px-4 border-b"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.title}
@@ -103,14 +105,17 @@ export const Header = () => {
               ))}
               <Link 
                 to="/admin" 
-                className="text-gray-700 hover:text-medical-blue transition-colors py-2 px-4 border-b"
+                className="text-foreground hover:text-medical-blue transition-colors py-2 px-4 border-b"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Admin
               </Link>
               
-              {/* Auth buttons moved below menu items */}
+              {/* Theme toggle and auth buttons moved below menu items */}
               <div className="flex flex-col space-y-2 pt-4 px-4">
+                <div className="flex justify-center pb-2">
+                  <ThemeToggle />
+                </div>
                 <Button variant="medical-outline" size="sm" className="w-full">
                   Login
                 </Button>
