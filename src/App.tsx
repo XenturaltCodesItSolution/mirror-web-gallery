@@ -10,6 +10,7 @@ import { SiteSettingsProvider } from "@/contexts/SiteSettingsContext";
 import { MenuProvider } from "@/contexts/MenuContext";
 import { BackgroundProvider } from "@/contexts/BackgroundContext";
 import { ContentProvider } from "@/contexts/ContentContext";
+import { GlobalSettingsProvider } from "@/contexts/GlobalSettingsContext";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import Index from "./pages/Index";
@@ -29,13 +30,14 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <AdminProvider>
-        <ServiceProvider>
-          <ContactProvider>
-            <SiteSettingsProvider>
-              <MenuProvider>
-                <BackgroundProvider>
-                  <ContentProvider>
+      <GlobalSettingsProvider>
+        <AdminProvider>
+          <ServiceProvider>
+            <ContactProvider>
+              <SiteSettingsProvider>
+                <MenuProvider>
+                  <BackgroundProvider>
+                    <ContentProvider>
               <Toaster />
               <Sonner />
               <BrowserRouter>
@@ -66,6 +68,7 @@ const App = () => (
           </ContactProvider>
         </ServiceProvider>
       </AdminProvider>
+      </GlobalSettingsProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

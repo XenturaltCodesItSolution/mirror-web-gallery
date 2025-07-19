@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Users, Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useGlobalSettings } from "@/contexts/GlobalSettingsContext";
 
 interface ServiceCardProps {
   id: string;
@@ -31,6 +32,7 @@ export const ServiceCard = ({
   imageAlt,
   image
 }: ServiceCardProps) => {
+  const { settings } = useGlobalSettings();
   return (
     <Card className="relative group hover:shadow-xl transition-all duration-300 border-2 hover:border-medical-blue">
       {isPopular && (
@@ -93,7 +95,9 @@ export const ServiceCard = ({
         <div className="border-t pt-4">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <span className="text-2xl font-bold text-medical-blue">{price}</span>
+              <span className="text-2xl font-bold text-medical-blue">
+                {settings.currency.symbol}{price.replace(/^[\$₹€£¥]/, '')}
+              </span>
               <span className="text-gray-500 text-sm ml-1">+</span>
             </div>
             <Button 

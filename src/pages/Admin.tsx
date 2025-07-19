@@ -6,6 +6,7 @@ import { useSiteSettings } from '@/contexts/SiteSettingsContext';
 import { useMenu } from '@/contexts/MenuContext';
 import { useBackgroundImages } from '@/contexts/BackgroundContext';
 import { useContent } from '@/contexts/ContentContext';
+import { useGlobalSettings } from '@/contexts/GlobalSettingsContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -29,6 +30,7 @@ export const Admin = () => {
     updateBannerContent, updateAboutSection, addTestimonial, updateTestimonial, deleteTestimonial,
     addFAQ, updateFAQ, deleteFAQ, addBlogPost, updateBlogPost, deleteBlogPost 
   } = useContent();
+  const { settings, updateSettings, currencies, languages } = useGlobalSettings();
   const { isLoggedIn, login, logout } = useAdmin();
   const { toast } = useToast();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -540,13 +542,14 @@ export const Admin = () => {
       </div>
 
       <Tabs defaultValue="services" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-6">
+            <TabsList className="grid w-full grid-cols-7">
               <TabsTrigger value="services">Services</TabsTrigger>
               <TabsTrigger value="contact">Contact Info</TabsTrigger>
               <TabsTrigger value="menu">Menu</TabsTrigger>
               <TabsTrigger value="backgrounds">Backgrounds</TabsTrigger>
               <TabsTrigger value="content">Content</TabsTrigger>
               <TabsTrigger value="settings">Settings</TabsTrigger>
+              <TabsTrigger value="global-settings">Global</TabsTrigger>
             </TabsList>
 
         <TabsContent value="services" className="space-y-6">
@@ -1478,6 +1481,92 @@ export const Admin = () => {
                   Update Website Settings
                 </Button>
               </form>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Global Settings Tab */}
+        <TabsContent value="global-settings">
+          <Card>
+            <CardHeader>
+              <CardTitle>Global Settings</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Currency Settings */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Currency Settings</h3>
+                <div>
+                  <Label htmlFor="currency">Default Currency</Label>
+                  <select
+                    id="currency"
+                    value={settings.currency.code}
+                    onChange={(e) => {
+                      const selectedCurrency = currencies.find(c => c.code === e.target.value);
+                      if (selectedCurrency) {
+                        updateSettings({ currency: selectedCurrency });
+                        toast({
+                          title: "Currency Updated",
+                          description: `Currency changed to ${selectedCurrency.name}`,
+                        });
+                      }
+                    }}
+                    className="w-full p-2 border rounded-md"
+                  >
+                    {currencies.map(currency => (
+                      <option key={currency.code} value={currency.code}>
+                        {currency.symbol} - {currency.name} ({currency.code})
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Current: {settings.currency.symbol} ({settings.currency.name})
+                  </p>
+                </div>
+              </div>
+
+              {/* Language Settings */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Language Settings</h3>
+                <div>
+                  <Label htmlFor="language">Default Language</Label>
+                  <select
+                    id="language"
+                    value={settings.language.code}
+                    onChange={(e) => {
+                      const selectedLanguage = languages.find(l => l.code === e.target.value);
+                      if (selectedLanguage) {
+                        updateSettings({ language: selectedLanguage });
+                        toast({
+                          title: "Language Updated",
+                          description: `Language changed to ${selectedLanguage.name}`,
+                        });
+                      }
+                    }}
+                    className="w-full p-2 border rounded-md"
+                  >
+                    {languages.map(language => (
+                      <option key={language.code} value={language.code}>
+                        {language.name} ({language.code})
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Current: {settings.language.name}
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t">
+                <h4 className="font-medium mb-2">Preview</h4>
+                <div className="p-4 bg-muted rounded-lg">
+                  <p className="text-sm">
+                    Sample price: <span className="font-bold">{settings.currency.symbol}99</span>
+                  </p>
+                  <p className="text-sm">
+                    Language: <span className="font-bold">{settings.language.name}</span>
+                  </p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
