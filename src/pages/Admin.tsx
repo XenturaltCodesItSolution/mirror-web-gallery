@@ -169,7 +169,7 @@ export const Admin = () => {
   // If not logged in, show login form
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-center">Admin Login</CardTitle>
@@ -195,10 +195,10 @@ export const Admin = () => {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full">
+              <Button type="submit" variant="medical" className="w-full">
                 Login
               </Button>
-              <p className="text-sm text-gray-600 text-center">
+              <p className="text-sm text-muted-foreground text-center">
                 Demo credentials: admin / admin123
               </p>
             </form>
@@ -337,7 +337,7 @@ export const Admin = () => {
             id="price"
             value={formData.price}
             onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
-            placeholder="$30"
+            placeholder={`${settings?.currency?.symbol || '$'}30`}
             required
           />
         </div>
@@ -534,7 +534,7 @@ export const Admin = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Admin Panel</h1>
+        <h1 className="text-3xl font-bold text-foreground">Admin Panel</h1>
         <Button onClick={logout} variant="outline">
           <LogOut className="w-4 h-4 mr-2" />
           Logout
