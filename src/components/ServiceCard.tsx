@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Clock, Users, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useGlobalSettings } from "@/contexts/GlobalSettingsContext";
+import { BookingForm } from "@/components/BookingForm";
+import { useState } from "react";
 
 interface ServiceCardProps {
   id: string;
@@ -33,6 +35,7 @@ export const ServiceCard = ({
   image
 }: ServiceCardProps) => {
   const { settings } = useGlobalSettings();
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
   return (
     <Card className="relative group hover:shadow-xl transition-all duration-300 border-2 hover:border-medical-blue">
       {isPopular && (
@@ -104,6 +107,7 @@ export const ServiceCard = ({
               variant={isPopular ? "medical-red" : "medical"} 
               size="sm"
               className="shrink-0"
+              onClick={() => setIsBookingOpen(true)}
             >
               Book Now
             </Button>
@@ -116,6 +120,14 @@ export const ServiceCard = ({
           </Button>
         </div>
       </CardContent>
+      
+      <BookingForm
+        isOpen={isBookingOpen}
+        onClose={() => setIsBookingOpen(false)}
+        itemName={title}
+        itemPrice={`${settings.currency.symbol}${price.replace(/^[\$₹€£¥]/, '')}`}
+        itemType="service"
+      />
     </Card>
   );
 };

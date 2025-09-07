@@ -12,8 +12,11 @@ import { MenuProvider } from "@/contexts/MenuContext";
 import { BackgroundProvider } from "@/contexts/BackgroundContext";
 import { ContentProvider } from "@/contexts/ContentContext";
 import { GlobalSettingsProvider } from "@/contexts/GlobalSettingsContext";
+import { CartProvider } from "@/contexts/CartContext";
+import { BloodTestProvider } from "@/contexts/BloodTestContext";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { Cart } from "@/components/Cart";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Offers from "./pages/Offers";
@@ -33,15 +36,18 @@ const App = () => (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <TooltipProvider>
         <GlobalSettingsProvider>
-        <AdminProvider>
-          <ServiceProvider>
-            <ContactProvider>
-              <SiteSettingsProvider>
-                <MenuProvider>
-                  <BackgroundProvider>
-                    <ContentProvider>
+          <CartProvider>
+            <BloodTestProvider>
+              <AdminProvider>
+                <ServiceProvider>
+                  <ContactProvider>
+                    <SiteSettingsProvider>
+                      <MenuProvider>
+                        <BackgroundProvider>
+                          <ContentProvider>
               <Toaster />
               <Sonner />
+              <Cart />
               <BrowserRouter>
                 <div className="App">
                   <Header />
@@ -70,6 +76,8 @@ const App = () => (
           </ContactProvider>
         </ServiceProvider>
       </AdminProvider>
+            </BloodTestProvider>
+          </CartProvider>
         </GlobalSettingsProvider>
       </TooltipProvider>
     </ThemeProvider>

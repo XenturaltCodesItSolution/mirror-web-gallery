@@ -1,17 +1,20 @@
 import { Button } from "@/components/ui/button";
-import { Phone, Mail, Clock, Menu, X } from "lucide-react";
+import { Phone, Mail, Clock, Menu, X, ShoppingCart } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useContactInfo } from "@/contexts/ContactContext";
 import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 import { useMenu } from "@/contexts/MenuContext";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useCart } from "@/contexts/CartContext";
 
 export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { contactInfo } = useContactInfo();
   const { siteSettings } = useSiteSettings();
   const { menuItems } = useMenu();
+  const { getTotalItems, setIsOpen } = useCart();
 
   return (
     <header className="bg-background border-b shadow-md">
@@ -70,6 +73,22 @@ export const Header = () => {
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-3">
             <ThemeToggle />
+            
+            {/* Cart Button */}
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setIsOpen(true)}
+              className="relative"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              {getTotalItems() > 0 && (
+                <Badge className="absolute -top-2 -right-2 bg-medical-red text-white text-xs w-5 h-5 rounded-full p-0 flex items-center justify-center">
+                  {getTotalItems()}
+                </Badge>
+              )}
+            </Button>
+            
             <Button variant="medical-outline" size="sm">
               Login
             </Button>
@@ -111,11 +130,28 @@ export const Header = () => {
                 Admin
               </Link>
               
-              {/* Theme toggle and auth buttons moved below menu items */}
+              {/* Theme toggle, cart and auth buttons moved below menu items */}
               <div className="flex flex-col space-y-2 pt-4 px-4">
                 <div className="flex justify-center pb-2">
                   <ThemeToggle />
                 </div>
+                
+                {/* Mobile Cart Button */}
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full relative"
+                  onClick={() => setIsOpen(true)}
+                >
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Cart
+                  {getTotalItems() > 0 && (
+                    <Badge className="ml-2 bg-medical-red text-white text-xs">
+                      {getTotalItems()}
+                    </Badge>
+                  )}
+                </Button>
+                
                 <Button variant="medical-outline" size="sm" className="w-full">
                   Login
                 </Button>

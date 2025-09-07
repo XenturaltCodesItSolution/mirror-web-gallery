@@ -7,6 +7,7 @@ import { useMenu } from '@/contexts/MenuContext';
 import { useBackgroundImages } from '@/contexts/BackgroundContext';
 import { useContent } from '@/contexts/ContentContext';
 import { useGlobalSettings } from '@/contexts/GlobalSettingsContext';
+import { useBloodTests } from '@/contexts/BloodTestContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -31,6 +32,7 @@ export const Admin = () => {
     addFAQ, updateFAQ, deleteFAQ, addBlogPost, updateBlogPost, deleteBlogPost 
   } = useContent();
   const { settings, updateSettings, currencies, languages } = useGlobalSettings();
+  const { bloodTests, addBloodTest, updateBloodTest, deleteBloodTest } = useBloodTests();
   const { isLoggedIn, login, logout } = useAdmin();
   const { toast } = useToast();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -85,6 +87,21 @@ export const Admin = () => {
     imageUrl: '',
     tags: []
   });
+
+  // State for blood test management
+  const [newBloodTest, setNewBloodTest] = useState({
+    name: '',
+    price: '',
+    originalPrice: '',
+    description: '',
+    sampleType: 'Blood',
+    fasting: 'Not Required',
+    reportTime: '6 hours',
+    category: 'Basic',
+    popular: false
+  });
+  const [editingBloodTest, setEditingBloodTest] = useState<any>(null);
+  const [isBloodTestDialogOpen, setIsBloodTestDialogOpen] = useState(false);
 
   // Update forms when context changes
   useEffect(() => {
@@ -284,6 +301,66 @@ export const Admin = () => {
       ...prev,
       [field]: prev[field].filter((_, i) => i !== index)
     }));
+  };
+
+  // Blood Test Management Functions
+  const handleBloodTestSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (editingBloodTest) {
+      updateBloodTest(editingBloodTest.id, newBloodTest);
+      toast({
+        title: "Blood test updated",
+        description: "Blood test has been updated successfully."
+      });
+      setEditingBloodTest(null);
+    } else {
+      addBloodTest(newBloodTest);
+      toast({
+        title: "Blood test added",
+        description: "New blood test has been added successfully."
+      });
+      setIsBloodTestDialogOpen(false);
+    }
+    
+    resetBloodTestForm();
+  };
+
+  const handleEditBloodTest = (bloodTest: any) => {
+    setEditingBloodTest(bloodTest);
+    setNewBloodTest({
+      name: bloodTest.name,
+      price: bloodTest.price,
+      originalPrice: bloodTest.originalPrice,
+      description: bloodTest.description,
+      sampleType: bloodTest.sampleType,
+      fasting: bloodTest.fasting,
+      reportTime: bloodTest.reportTime,
+      category: bloodTest.category,
+      popular: bloodTest.popular
+    });
+  };
+
+  const handleDeleteBloodTest = (id: string) => {
+    deleteBloodTest(id);
+    toast({
+      title: "Blood test deleted",
+      description: "Blood test has been deleted successfully."
+    });
+  };
+
+  const resetBloodTestForm = () => {
+    setNewBloodTest({
+      name: '',
+      price: '',
+      originalPrice: '',
+      description: '',
+      sampleType: 'Blood',
+      fasting: 'Not Required',
+      reportTime: '6 hours',
+      category: 'Basic',
+      popular: false
+    });
   };
 
   const ServiceForm = () => (
@@ -542,8 +619,9 @@ export const Admin = () => {
       </div>
 
       <Tabs defaultValue="services" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-7">
+            <TabsList className="grid w-full grid-cols-8">
               <TabsTrigger value="services">Services</TabsTrigger>
+              <TabsTrigger value="bloodtests">Blood Tests</TabsTrigger>
               <TabsTrigger value="contact">Contact Info</TabsTrigger>
               <TabsTrigger value="menu">Menu</TabsTrigger>
               <TabsTrigger value="backgrounds">Backgrounds</TabsTrigger>
@@ -694,6 +772,359 @@ export const Admin = () => {
               </form>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Blood Tests Management Tab */}
+        <TabsContent value="bloodtests" className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold">Blood Test Management</h2>
+            <Dialog open={isBloodTestDialogOpen} onOpenChange={setIsBloodTestDialogOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add New Blood Test
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>Add New Blood Test</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleBloodTestSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="bloodtest-name">Test Name</Label>
+                      <Input
+                        id="bloodtest-name"
+                        value={newBloodTest.name}
+                        onChange={(e) => setNewBloodTest(prev => ({ ...prev, name: e.target.value }))}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="bloodtest-category">Category</Label>
+                      <select
+                        id="bloodtest-category"
+                        value={newBloodTest.category}
+                        onChange={(e) => setNewBloodTest(prev => ({ ...prev, category: e.target.value }))}
+                        className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                      >
+                        <option value="Basic">Basic</option>
+                        <option value="Cardiac">Cardiac</option>
+                        <option value="Organ Function">Organ Function</option>
+                        <option value="Hormonal">Hormonal</option>
+                        <option value="Diabetes">Diabetes</option>
+                        <option value="Vitamins">Vitamins</option>
+                        <option value="Minerals">Minerals</option>
+                        <option value="Inflammatory">Inflammatory</option>
+                        <option value="Cancer Markers">Cancer Markers</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="bloodtest-description">Description</Label>
+                    <Textarea
+                      id="bloodtest-description"
+                      value={newBloodTest.description}
+                      onChange={(e) => setNewBloodTest(prev => ({ ...prev, description: e.target.value }))}
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="bloodtest-price">Price</Label>
+                      <Input
+                        id="bloodtest-price"
+                        value={newBloodTest.price}
+                        onChange={(e) => setNewBloodTest(prev => ({ ...prev, price: e.target.value }))}
+                        placeholder={`${settings?.currency?.symbol || '$'}25`}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="bloodtest-original-price">Original Price</Label>
+                      <Input
+                        id="bloodtest-original-price"
+                        value={newBloodTest.originalPrice}
+                        onChange={(e) => setNewBloodTest(prev => ({ ...prev, originalPrice: e.target.value }))}
+                        placeholder={`${settings?.currency?.symbol || '$'}35`}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <Label htmlFor="bloodtest-sample-type">Sample Type</Label>
+                      <select
+                        id="bloodtest-sample-type"
+                        value={newBloodTest.sampleType}
+                        onChange={(e) => setNewBloodTest(prev => ({ ...prev, sampleType: e.target.value }))}
+                        className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                      >
+                        <option value="Blood">Blood</option>
+                        <option value="Urine">Urine</option>
+                        <option value="Saliva">Saliva</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label htmlFor="bloodtest-fasting">Fasting Requirement</Label>
+                      <select
+                        id="bloodtest-fasting"
+                        value={newBloodTest.fasting}
+                        onChange={(e) => setNewBloodTest(prev => ({ ...prev, fasting: e.target.value }))}
+                        className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                      >
+                        <option value="Not Required">Not Required</option>
+                        <option value="8 hours">8 hours</option>
+                        <option value="12 hours">12 hours</option>
+                        <option value="24 hours">24 hours</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label htmlFor="bloodtest-report-time">Report Time</Label>
+                      <select
+                        id="bloodtest-report-time"
+                        value={newBloodTest.reportTime}
+                        onChange={(e) => setNewBloodTest(prev => ({ ...prev, reportTime: e.target.value }))}
+                        className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                      >
+                        <option value="6 hours">6 hours</option>
+                        <option value="8 hours">8 hours</option>
+                        <option value="12 hours">12 hours</option>
+                        <option value="24 hours">24 hours</option>
+                        <option value="48 hours">48 hours</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="bloodtest-popular"
+                      checked={newBloodTest.popular}
+                      onCheckedChange={(checked) => setNewBloodTest(prev => ({ ...prev, popular: checked }))}
+                    />
+                    <Label htmlFor="bloodtest-popular">Mark as Popular</Label>
+                  </div>
+
+                  <div className="flex justify-end space-x-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setEditingBloodTest(null);
+                        setIsBloodTestDialogOpen(false);
+                        resetBloodTestForm();
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button type="submit">
+                      {editingBloodTest ? 'Update Blood Test' : 'Add Blood Test'}
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {bloodTests.map((test) => (
+              <Card key={test.id} className="relative">
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle className="text-lg">{test.name}</CardTitle>
+                      <Badge variant="outline" className="mt-1">
+                        {test.category}
+                      </Badge>
+                      {test.popular && (
+                        <Badge className="ml-2 bg-medical-red text-white">Popular</Badge>
+                      )}
+                    </div>
+                    <div className="flex space-x-1">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEditBloodTest(test)}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeleteBloodTest(test.id)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-3">{test.description}</p>
+                  
+                  <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mb-3">
+                    <div>Price: {test.price}</div>
+                    <div>Original: {test.originalPrice}</div>
+                    <div>Report: {test.reportTime}</div>
+                    <div>Fasting: {test.fasting}</div>
+                  </div>
+                  
+                  <div className="text-xs">
+                    <span>Sample: {test.sampleType}</span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Edit Blood Test Dialog */}
+          {editingBloodTest && (
+            <Dialog open={!!editingBloodTest} onOpenChange={() => setEditingBloodTest(null)}>
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>Edit Blood Test</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleBloodTestSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="edit-bloodtest-name">Test Name</Label>
+                      <Input
+                        id="edit-bloodtest-name"
+                        value={newBloodTest.name}
+                        onChange={(e) => setNewBloodTest(prev => ({ ...prev, name: e.target.value }))}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="edit-bloodtest-category">Category</Label>
+                      <select
+                        id="edit-bloodtest-category"
+                        value={newBloodTest.category}
+                        onChange={(e) => setNewBloodTest(prev => ({ ...prev, category: e.target.value }))}
+                        className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                      >
+                        <option value="Basic">Basic</option>
+                        <option value="Cardiac">Cardiac</option>
+                        <option value="Organ Function">Organ Function</option>
+                        <option value="Hormonal">Hormonal</option>
+                        <option value="Diabetes">Diabetes</option>
+                        <option value="Vitamins">Vitamins</option>
+                        <option value="Minerals">Minerals</option>
+                        <option value="Inflammatory">Inflammatory</option>
+                        <option value="Cancer Markers">Cancer Markers</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="edit-bloodtest-description">Description</Label>
+                    <Textarea
+                      id="edit-bloodtest-description"
+                      value={newBloodTest.description}
+                      onChange={(e) => setNewBloodTest(prev => ({ ...prev, description: e.target.value }))}
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="edit-bloodtest-price">Price</Label>
+                      <Input
+                        id="edit-bloodtest-price"
+                        value={newBloodTest.price}
+                        onChange={(e) => setNewBloodTest(prev => ({ ...prev, price: e.target.value }))}
+                        placeholder={`${settings?.currency?.symbol || '$'}25`}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="edit-bloodtest-original-price">Original Price</Label>
+                      <Input
+                        id="edit-bloodtest-original-price"
+                        value={newBloodTest.originalPrice}
+                        onChange={(e) => setNewBloodTest(prev => ({ ...prev, originalPrice: e.target.value }))}
+                        placeholder={`${settings?.currency?.symbol || '$'}35`}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <Label htmlFor="edit-bloodtest-sample-type">Sample Type</Label>
+                      <select
+                        id="edit-bloodtest-sample-type"
+                        value={newBloodTest.sampleType}
+                        onChange={(e) => setNewBloodTest(prev => ({ ...prev, sampleType: e.target.value }))}
+                        className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                      >
+                        <option value="Blood">Blood</option>
+                        <option value="Urine">Urine</option>
+                        <option value="Saliva">Saliva</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label htmlFor="edit-bloodtest-fasting">Fasting Requirement</Label>
+                      <select
+                        id="edit-bloodtest-fasting"
+                        value={newBloodTest.fasting}
+                        onChange={(e) => setNewBloodTest(prev => ({ ...prev, fasting: e.target.value }))}
+                        className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                      >
+                        <option value="Not Required">Not Required</option>
+                        <option value="8 hours">8 hours</option>
+                        <option value="12 hours">12 hours</option>
+                        <option value="24 hours">24 hours</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label htmlFor="edit-bloodtest-report-time">Report Time</Label>
+                      <select
+                        id="edit-bloodtest-report-time"
+                        value={newBloodTest.reportTime}
+                        onChange={(e) => setNewBloodTest(prev => ({ ...prev, reportTime: e.target.value }))}
+                        className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                      >
+                        <option value="6 hours">6 hours</option>
+                        <option value="8 hours">8 hours</option>
+                        <option value="12 hours">12 hours</option>
+                        <option value="24 hours">24 hours</option>
+                        <option value="48 hours">48 hours</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="edit-bloodtest-popular"
+                      checked={newBloodTest.popular}
+                      onCheckedChange={(checked) => setNewBloodTest(prev => ({ ...prev, popular: checked }))}
+                    />
+                    <Label htmlFor="edit-bloodtest-popular">Mark as Popular</Label>
+                  </div>
+
+                  <div className="flex justify-end space-x-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setEditingBloodTest(null);
+                        resetBloodTestForm();
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button type="submit">
+                      Update Blood Test
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
+          )}
         </TabsContent>
 
         {/* Menu Management Tab */}
